@@ -1,0 +1,91 @@
+.flex {
+	display: flex;
+}
+
+.month {
+	display: flex;
+	justify-content: space-around;
+}
+
+.app {
+	position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-right: -50%;
+    transform: translate(-50%, -50%);
+}
+
+.square {
+	position: relative;
+	height: 17px;
+	width: 17px;
+	margin: 3px;
+}
+
+.tooltip {
+	position: absolute; 
+	width: 145px;
+	border-radius: 3px;
+	top: -255%;
+	left: -65px;
+	background-color: black;
+	padding-top: 5px;
+	text-align: center;
+	z-index: 10;
+	color: #FFFFFF;
+
+}
+.tooltip::after {
+	content: '';
+    position: absolute;
+    left: 45%;
+    top: 100%;
+    width: 0;
+    height: 0;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-top: 8px solid black;
+    clear: both;
+}
+.tooltip-cont {
+	font-size: 12px;
+
+}
+
+.tooltip-date {
+	font-size: 10px;
+	color: #7C7C7C;
+	padding-bottom: 5px;
+}
+
+.tooltip-extra {
+	position: absolute; 
+	width: 145px;
+	border-radius: 3px;
+	top: -29px;
+	left: -65px;
+	background-color: black;
+	padding-top: 5px;
+	text-align: center;
+	z-index: 10;
+	color: #FFFFFF;
+} 
+
+.tooltip-extra::after {
+	content: '';
+    position: absolute;
+    left: 45%;
+    top: 100%;
+    width: 0;
+    height: 0;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-top: 8px solid black;
+    clear: both;
+}
+
+.extra {
+	display: flex;
+	margin-top: 20px;
+}
+
