@@ -13,51 +13,55 @@ export default function YearContainer() {
         .then(data => setDates(data));
   	}, []);
 
+	// variable from where to start
  	const dateFrom = new Date();
-
+ 	// today's date
+ 	const now = new Date();
+ 	// used to form 51X7 table at the beginning
 	const dateFromToAdjust = new Date();
-
+	// used to form 51X7 table at the end
+	const dateFromToEnd = new Date();
+	
+	dateFrom.setDate(dateFrom.getDate() - 357);
 	dateFromToAdjust.setDate(dateFromToAdjust.getDate() - 357);
 
-	const now = new Date();
-
-	dateFrom.setDate(dateFrom.getDate() - 357);
-    
-    
+	//filling array from 50 weeks back
 	const daysArray = [];
-
 	for (let d = dateFrom; d <= now; d.setDate(d.getDate() + 1)) {
 		daysArray.push({ date: new Date(d).toISOString().split('T')[0], count: 0 });
 	}
 
-	const fromDate = dateFromToAdjust.getDay() - 1;
-
-
-	if (fromDate!=0) {
-		for (let i = 0; i < fromDate; i++) {
-			dateFromToAdjust.setDate(dateFromToAdjust.getDate() + 1);
-			daysArray.unshift({ date: dateFromToAdjust.toISOString().split('T')[0], count: 0 });
-		} 
-	} else {
-		for (let i = 0; i < 6; i++) {
-			dateFromToAdjust.setDate(dateFromToAdjust.getDate() + 1);
-			daysArray.unshift({ date: dateFromToAdjust.toISOString().split('T')[0], count: 0 });
+	
+	// filling with extra dates before first date, for example if first date is wednesday we fill from monday up to wednesday
+	let daysFromToSubstract = dateFromToAdjust.getDay();
+	if (!daysFromToSubstract) {
+		daysFromToSubstract = 7;
+	}
+	const subtrB = daysFromToSubstract - 1;
+	for (let c = 0; c < subtrB; c++) {
+		const newDate = dateFromToAdjust.setDate(dateFromToAdjust.getDate()-1);
+		daysArray.unshift({ date: new Date(newDate).toISOString().split('T')[0], count: 0 })
+	}
+	
+	
+	// filling with extra dates after last date, for example if first date is wednesday we fill from monday up to sunday
+	let daysFromToSubstractAtTheEnd = dateFromToEnd.getDay();
+	const subtrEnd = 6 - daysFromToSubstractAtTheEnd;
+	if (subtrEnd && dateFromToEnd.getDay()!=0){
+		for (let c = 0; c <= subtrEnd; c++ ) {
+			const newDate = dateFromToEnd.setDate(dateFromToEnd.getDate()+1);
+			daysArray.push({ date: new Date(newDate).toISOString().split('T')[0], count: 0 })
+		}
+		// removing first 7 days because exceeds 51x7 table
+		for (let c = 0; c<=6; c++) {
+		daysArray.shift();
 		}
 	}
+	
 
+	
 
-	const today = 6 - now.getDay();
-	if (today!=6) {
-		for (let i = 0; i <= today; i++) {
-			now.setDate(now.getDate() + 1);
-			daysArray.push({ date: now.toISOString().split('T')[0], count: 0 });
-		} 
-		for (let i = 0; i <= 6; i++) {
-			daysArray.shift();
-		}  
-	}
-
-
+	//iterate over empty date with counts and update its count property according to our fetched data
 	for (const [key, value] of Object.entries(dates)) {
 		let obj = daysArray.find((item) => item.date === key);
 		if (obj) {
@@ -65,6 +69,7 @@ export default function YearContainer() {
 		}
 	}
 
+	// it will display every weekday on new row
 	const weekdays = {
 		'Пн.': [],
 		'Вт.': [],
@@ -72,7 +77,7 @@ export default function YearContainer() {
 		'Чт.': [],
 		'Пт.': [],
 		'Сб.': [],
-		'Вс.': []
+		'Всс.': []
 	};
 
 	daysArray.forEach(function (item) {
@@ -97,7 +102,7 @@ export default function YearContainer() {
 				weekdays['Сб.'].push(item);
 				break;
 			case 0:
-				weekdays['Вс.'].push(item);
+				weekdays['Всс.'].push(item);
 			break;
 		}
 	}
@@ -113,7 +118,7 @@ export default function YearContainer() {
 				}
 			</div>
 			<div>
-				<MonthContainer />
+				<MonthContainer currentDate={daysArray[daysArray.length-1].date} />
 				{
 			        Object.entries(weekdays).map(([key, value],index) => (
 			        	<DisplayDaysByWeek currentWeekDay={key} days={value} key={index}/>
